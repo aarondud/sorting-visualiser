@@ -1,11 +1,18 @@
 .array-container {
     position: absolute;
     left: 100px;
+    top: 60px;
+
 }
 
 .array-bar {
-    width: 2px;
+    width: 4.5px;
     background-color: pink;
     display: inline-block;
     margin: 0 1px;
+}
+
+.menu-bar {
+    background-color: grey;
+    margin: 0 20px;
 }
