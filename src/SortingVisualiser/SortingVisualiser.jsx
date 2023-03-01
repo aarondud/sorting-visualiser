@@ -25,6 +25,14 @@ export default class SortingVisualiser extends React.Component {
         this.setState({array});
     }
 
+    mergeSort() {}
+
+    quickSort() {}
+
+    heapSort() {}
+
+    bubbleSprt() {}
+
     render() {
         const {array} = this.state;
 
