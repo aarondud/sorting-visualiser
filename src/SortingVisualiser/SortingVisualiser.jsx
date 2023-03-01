@@ -1,6 +1,6 @@
 import React from 'react';
 import './SortingVisualiser.css';
-import * as sortingAlgorithms from '../sortingAlgorithms/sortingAlgorithms.js'
+import * as sortingAlgorithms from '../sortingAlgorithms/sortingAlgorithms';
 
 export default class SortingVisualiser extends React.Component {
     constructor(props) {
@@ -26,29 +26,59 @@ export default class SortingVisualiser extends React.Component {
         this.setState({array});
     }
 
-    mergeSort() {
-        const sortedArray = sortingAlgorithms.mergeSort(this.state.array);
-        // sorted
-        this.testSort(sortedArray)
-        
+    mergeSort(arr) {
+        const sortedArray = sortingAlgorithms.mergeSort(this.state.array.slice());
+        //console.log("is import working");
+        //console.log(sortedArray);
     }
 
+    // source - stack overflow
+    // https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
     arraysEqual(arr1, arr2) {
         if (arr1 == arr2) {
             return true;
         }
-        if (arr1.length != arr2.length) {
+        if (arr1 == null || arr2 == null) {
+            //console.log(arr1);
+            //console.log(arr2);
+            console.log(2);
             return false;
         }
-        if (arr1 == null || arr2 == null) {
+        if (arr1.length !== arr2.length) {
+            console.log(3);
             return false;
+        }
+
+        for (var i = 0; i < arr1.length; ++i) {
+            if (arr1[i] !== arr2[i]) {
+                console.log(4);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    randomInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
+    testSortingAlgorithms() {
+        for (let i = 0; i < 100; i++) {
+            const arr = [];
+            const bound = this.randomInteger(1,2000);
+            
+            for (let i = 0; i < bound; i++) {
+                arr.push(this.randomInteger(-2000,2000));
+            }
+            
+            const jsSortedArray = arr.slice().sort((a,b) => a - b);;
+            const mergeSortedArray = sortingAlgorithms.mergeSort(arr.slice());
+            console.log(this.arraysEqual(jsSortedArray, mergeSortedArray));
         }
     }
 
-    testSort(mySortedArray) {
-        const jsSortedArray = this.state.array.slice().sort();
-        console.log(this.arraysEqual(jsSortedArray, mySortedArray));
-    }
+    
+
 
 
     quickSort() {}
@@ -68,6 +98,8 @@ export default class SortingVisualiser extends React.Component {
                     <button onClick={() => this.quickSort()}>Quick Sort</button>
                     <button onClick={() => this.heapSort()}>Heap Sort</button>
                     <button onClick={() => this.bubbleSprt()}>Bubble Sort</button>
+                    <button onClick={() => this.testSortingAlgorithms()}>Test Sorting</button>
+
                 </div>
    
                 <div className="array-container">

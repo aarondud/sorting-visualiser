@@ -6,7 +6,7 @@
  * @param {array} array unsorted array of doubles
  * @returns {array} ascending sorted array
  */
-function mergeSort(array) {
+export function mergeSort(array) {
 
     // recursion finished when 1 item remaining in array
     if (array.length <= 1) {
