@@ -1,58 +1,96 @@
 /**
  * Implements Merge Sort in ascending order
- * Stable, recursive, divide & conquer, O(nlogn)
+ * Stable, recursive, divide & conquer, time O(nlogn), Space O(n)
  * Works well with large datasets, if size of dataset unknown consider other alogrithm like insertion sort
 
- * @param {array} array unsorted array of doubles
+ * @param {array} array unsorted array
  * @returns {array} ascending sorted array
  */
 export function mergeSort(array) {
 
-    // recursion finished when 1 item remaining in array
     if (array.length <= 1) {
         return array;
     }
 
-    // recursively call merge sort, recursively cutting array in half
-    let mid = Math.floor(array.length / 2),
-        leftArray = mergeSort(array.slice(0,mid)),
-        rightArray = mergeSort(array.slice(mid));
-    
-    // use merge utility to start build arrays back up, with each merge sorting along the way
-    return mergeArray(leftArray, rightArray);
-    
+    let auxillaryArray = array.slice();
+
+    mergeSortRec(array, 0, array.length - 1, auxillaryArray);
+
+    return array;
 
     /**
-     * Implements sorting and merging of two arrays
-     * O(N), where N = max(arr1.length, arr2.length)
+     * Recursive Merge Sort function
+     * Time O(nlogn), space O(n)
+     * Optimised to track bounds/indices for animaiton purposes, utilising an auxillary array to optomise space complexity
      * 
-     * @param {array} arr1 an array
-     * @param {array} arr2 an array
-     * @returns {array} sorted merged array
+     * @param {array} array unsorted array
+     * @param {integer} start starting indix of 1st half array
+     * @param {integer} end ending index of 2nd half array
+     * @param {array} auxArray auxillary array
      */
-    function mergeArray(arr1, arr2) {
-            
-        let sorted = [];
+    function mergeSortRec(array, start, end, auxArray) {
 
-        //while there are items in either array, check which first item is smaller, add it to the sorted array, and remove it from it's original array
-        while (arr1.length && arr2.length) {
-            if (arr1[0] < arr2[0]) {
-                sorted.push(arr1.shift());
-            }
-            else {
-                sorted.push(arr2.shift());
-            }
+        // recursion finished when divided down to single element
+        if (start == end) {
+            return;
         }
 
-        // If there's anything left over (ie. arrays not same size) concatonate remaining onto the end
-        return sorted.concat(arr1,arr2);
+        // middle index
+        const mid = Math.floor((start + end) / 2);
+
+        // recursively call merge sort
+        mergeSortRec(auxArray, start, mid, array);
+        mergeSortRec(auxArray, mid + 1, end, array);
+
+        //use merge utility to build arrays back up, with each merge sorting along the way
+        mergeArrays(array, start, mid, end, auxArray);
     }
 
+    /**
+     * Implements sorting and merging of two halves of array, achieved through auxillary array
+     * Time O(n), space O(n)
+     * 
+     * @param {array} auxArray auxillary array
+     * @param {integer} start starting index
+     * @param {integer} mid middle index
+     * @param {integer} end ending index
+     * @param {array} array unsorted array
+     */
+    function mergeArrays(auxArray, start, mid, end, array) {
+
+        let i1 = start, // index keeps positio in the 1st half of array
+            i2 = mid + 1, // index keeps position in the 2nd half of array
+            i = start; // index keeps position in the auxillary array
+
+        // while the indices are inside their half, check which item is smaller, overwrite the correspondng position in the auxillary array
+        while (i1 <= mid && i2 <= end) {
+            if (array[i1] < array[i2]) {
+                auxArray[i] = array[i1];
+                i1 += 1;
+            } else {
+                auxArray[i] = array[i2];
+                i2 += 1;
+            }
+            i += 1;
+        }
+
+        // if remaining elements unchecked in first half (ie. 1st half > 2nd half) overwrite onto the auxillary array
+        while (i1 <= mid) {
+            auxArray[i] = array[i1];
+            i += 1;
+            i1 += 1;
+        }
+
+        // if remaining elements unchecked in second half (ie. 2nd half > 1st half) overwrite onto the auxillary array
+        while (i2 <= end) {
+            auxArray[i] = array[i2];
+            i += 1;
+            i2 += 1;
+        }
+    }
 }
 
-
 export function bubbleSort(array) {
-
     for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < array.length - (i + 1); j++) {
             if (array[j] > array[j + 1]) {
