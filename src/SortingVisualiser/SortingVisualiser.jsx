@@ -28,8 +28,6 @@ export default class SortingVisualiser extends React.Component {
 
     mergeSort(arr) {
         const sortedArray = sortingAlgorithms.mergeSort(this.state.array.slice());
-        //console.log("is import working");
-        //console.log(sortedArray);
     }
 
     // source - stack overflow
@@ -73,19 +71,19 @@ export default class SortingVisualiser extends React.Component {
             
             const jsSortedArray = arr.slice().sort((a,b) => a - b);;
             const mergeSortedArray = sortingAlgorithms.mergeSort(arr.slice());
+            const bubbleSortedArray = sortingAlgorithms.bubbleSort(arr.slice());
             console.log(this.arraysEqual(jsSortedArray, mergeSortedArray));
+            console.log(this.arraysEqual(jsSortedArray, bubbleSortedArray));
         }
     }
-
-    
-
-
 
     quickSort() {}
 
     heapSort() {}
 
-    bubbleSprt() {}
+    bubbleSort() {
+        const sortedArray = sortingAlgorithms.bubbleSort(this.state.array.slice());
+    }
 
     render() {
         const {array} = this.state;
@@ -97,7 +95,7 @@ export default class SortingVisualiser extends React.Component {
                     <button onClick={() => this.mergeSort()}>Merge Sort</button>
                     <button onClick={() => this.quickSort()}>Quick Sort</button>
                     <button onClick={() => this.heapSort()}>Heap Sort</button>
-                    <button onClick={() => this.bubbleSprt()}>Bubble Sort</button>
+                    <button onClick={() => this.bubbleSort()}>Bubble Sort</button>
                     <button onClick={() => this.testSortingAlgorithms()}>Test Sorting</button>
 
                 </div>
