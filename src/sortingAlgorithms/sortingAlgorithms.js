@@ -6,32 +6,36 @@
  * @param {array} array unsorted array
  * @returns {array} ascending sorted array
  */
-export function mergeSort(array) {
+export function mergeSortAnimations(array) {
+
+    // array stores comparison and swapping animation sequences
+    const animations = [];
 
     if (array.length <= 1) {
-        return array;
+        return animations;
     }
 
-    let auxillaryArray = array.slice();
+    let auxiliaryArray = array.slice();
 
-    mergeSortRec(array, 0, array.length - 1, auxillaryArray);
+    mergeSortRec(array, 0, array.length - 1, auxiliaryArray, animations);
 
-    return array;
+    return animations;
 
     /**
      * Recursive Merge Sort function
      * Time O(nlogn), space O(n)
-     * Optimised to track bounds/indices for animaiton purposes, utilising an auxillary array to optomise space complexity
+     * Optimised to track bounds/indices for animaiton purposes, utilising an auxiliary array to optomise space complexity
      * 
      * @param {array} array unsorted array
      * @param {integer} start starting indix of 1st half array
      * @param {integer} end ending index of 2nd half array
-     * @param {array} auxArray auxillary array
+     * @param {array} auxArray auxiliary array
+     * @param {array} animations stores animation sequences
      */
-    function mergeSortRec(array, start, end, auxArray) {
+    function mergeSortRec(array, start, end, auxArray, animations) {
 
         // recursion finished when divided down to single element
-        if (start == end) {
+        if (start === end) {
             return;
         }
 
@@ -39,52 +43,82 @@ export function mergeSort(array) {
         const mid = Math.floor((start + end) / 2);
 
         // recursively call merge sort
-        mergeSortRec(auxArray, start, mid, array);
-        mergeSortRec(auxArray, mid + 1, end, array);
+        mergeSortRec(auxArray, start, mid, array, animations);
+        mergeSortRec(auxArray, mid + 1, end, array, animations);
 
         //use merge utility to build arrays back up, with each merge sorting along the way
-        mergeArrays(array, start, mid, end, auxArray);
+        mergeTwoArrays(array, start, mid, end, auxArray, animations);
     }
 
     /**
-     * Implements sorting and merging of two halves of array, achieved through auxillary array
+     * Implements sorting and merging of two halves of array, achieved through auxiliary array
      * Time O(n), space O(n)
      * 
-     * @param {array} auxArray auxillary array
+     * @param {array} array main, unsorted array
      * @param {integer} start starting index
      * @param {integer} mid middle index
      * @param {integer} end ending index
-     * @param {array} array unsorted array
+     * @param {array} auxArray auxiliary array
+     * @param {array} animations stores animation sequences
      */
-    function mergeArrays(auxArray, start, mid, end, array) {
+    function mergeTwoArrays(array, start, mid, end, auxArray, animations) {
 
         let i1 = start, // index keeps positio in the 1st half of array
             i2 = mid + 1, // index keeps position in the 2nd half of array
-            i = start; // index keeps position in the auxillary array
+            k = start; // index keeps position in the auxiliary array
 
-        // while the indices are inside their half, check which item is smaller, overwrite the correspondng position in the auxillary array
+        // while the indices are inside their half, check which item is smaller, overwrite the correspondng position in the auxiliary array
         while (i1 <= mid && i2 <= end) {
-            if (array[i1] < array[i2]) {
-                auxArray[i] = array[i1];
+
+            // comparing i1 and i2; push once to change colour
+            animations.push([i1, i2]);
+
+            // push a second time to revert their colour
+            animations.push([i1, i2]);
+
+
+            if (auxArray[i1] <= auxArray[i2]) {
+
+                // overwrite value at index k in main array with value of index i1 in auxiliary array
+                animations.push([k, auxArray[i1]]);
+                array[k] = auxArray[i1];
                 i1 += 1;
+
             } else {
-                auxArray[i] = array[i2];
+
+                // overwrite value at index k in main array with value of index i2 in auxilary array
+                animations.push([k, auxArray[i2]]);
+                array[k] = auxArray[i2];
                 i2 += 1;
             }
-            i += 1;
+            k += 1;
         }
 
-        // if remaining elements unchecked in first half (ie. 1st half > 2nd half) overwrite onto the auxillary array
+        // if remaining elements unchecked in first half (ie. 1st half > 2nd half) overwrite onto the auxiliary array
         while (i1 <= mid) {
-            auxArray[i] = array[i1];
-            i += 1;
+
+            //comparing i1 and i1, push once to change their colour, push a second time to revert their colour
+            animations.push([i1, i1]);
+            animations.push([i1, i1]);
+
+            // overwrite value at index k in main array with value of index i1 in auxilary array
+            animations.push([k, auxArray[i1]]);
+            array[k] = auxArray[i1];
+            k += 1;
             i1 += 1;
         }
 
-        // if remaining elements unchecked in second half (ie. 2nd half > 1st half) overwrite onto the auxillary array
+        // if remaining elements unchecked in second half (ie. 2nd half > 1st half) overwrite onto the auxiliary array
         while (i2 <= end) {
-            auxArray[i] = array[i2];
-            i += 1;
+
+            //comparing i2 and i2, push once to change their colour, push a second time to revert their colour
+            animations.push([i2, i2]);
+            animations.push([i2, i2]);
+
+            // overwite value at index k in main array with value of index i2 in auxiliary array
+            animations.push([k, auxArray[i2]]);
+            array[k] = auxArray[i2];
+            k += 1;
             i2 += 1;
         }
     }

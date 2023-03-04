@@ -2,6 +2,18 @@ import React from 'react';
 import './SortingVisualiser.css';
 import * as sortingAlgorithms from '../sortingAlgorithms/sortingAlgorithms';
 
+// animation speed (miliseconds)
+const ANIMATION_SPEED_MS = 3;
+
+// STATIC number of bars (values) in the array -- not used 
+const NUMBER_OF_ARRAY_BARS = 310;
+
+// main colour of array bars
+const PRIMARY_COLOUR = 'pink';
+
+// comparison colour of array bars
+const SECONDARY_COLOUR = 'magenta';
+
 export default class SortingVisualiser extends React.Component {
     constructor(props) {
         super(props);
@@ -16,24 +28,65 @@ export default class SortingVisualiser extends React.Component {
     // this is used during generate new array button
     resetArray() {
         const array = [];
-        const noElements = 200; // no of elements in an array
-        const MAXVALUE = 700; // max value of random integer 
+        // const MAXVALUE = 700; // max value of random integer 
+
+        let barHeight = (window.screen.height-150);
         
-        for (let i = 0; i < noElements; i++) {
-            array.push(getRandomInt(MAXVALUE));
+        // for (let i = 0; i < NUMBER_OF_ARRAY_BARS; i++) {
+        //     array.push(getRandomInt(barHeight));
+        // }
+
+        for (let i = 0; i < (window.screen.width-400)/4; i++) {
+            array.push(getRandomInt(barHeight));
         }
 
         this.setState({array});
     }
 
     mergeSort(arr) {
-        const sortedArray = sortingAlgorithms.mergeSort(this.state.array.slice());
-    }
+        //const sortedArray = sortingAlgorithms.mergeSort(this.state.array.slice());s
+        const animations = sortingAlgorithms.mergeSortAnimations(this.state.array);
+
+        for (let i = 0; i < animations.length; i++){
+
+            const arrayBars = document.getElementsByClassName('array-bar');
+            
+            // every 3 values we start a new animation
+            // if 1st value, change to comparison colour
+            // if 2nd value, change back to primary colour
+            // if 3rd value, we do the swap
+            const isColourChange = i % 3 !== 2;
+
+            if (isColourChange) {
+
+                const [barOneIndex, barTwoIndex] = animations[i];
+                const barOneStyle = arrayBars[barOneIndex].style;
+                const barTwoStyle = arrayBars[barTwoIndex].style;
+                const colour = i % 3 === 0 ? SECONDARY_COLOUR : PRIMARY_COLOUR;
+                setTimeout(() => {
+
+                    barOneStyle.backgroundColor = colour;
+                    barTwoStyle.backgroundColor = colour;
+                
+                },
+                i * ANIMATION_SPEED_MS);
+                }
+                else {
+                    setTimeout(() => {
+
+                        const [barOneIndex, newHeight] = animations[i];
+                        const barOneStyle = arrayBars[barOneIndex].style;
+                        barOneStyle.height = `${newHeight}px`;
+                    },
+                    i * ANIMATION_SPEED_MS);
+                }
+            }
+            }    
 
     // source - stack overflow
     // https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
     arraysEqual(arr1, arr2) {
-        if (arr1 == arr2) {
+        if (arr1 === arr2) {
             return true;
         }
         if (arr1 == null || arr2 == null) {
@@ -57,7 +110,7 @@ export default class SortingVisualiser extends React.Component {
     }
 
     randomInteger(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min)
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     testSortingAlgorithms() {
@@ -70,9 +123,9 @@ export default class SortingVisualiser extends React.Component {
             }
             
             const jsSortedArray = arr.slice().sort((a,b) => a - b);;
-            const mergeSortedArray = sortingAlgorithms.mergeSort(arr.slice());
+            // const mergeSortedArray = sortingAlgorithms.mergeSort(arr.slice());
             const bubbleSortedArray = sortingAlgorithms.bubbleSort(arr.slice());
-            console.log(this.arraysEqual(jsSortedArray, mergeSortedArray));
+            // console.log(this.arraysEqual(jsSortedArray, mergeSortedArray));
             console.log(this.arraysEqual(jsSortedArray, bubbleSortedArray));
         }
     }
@@ -106,7 +159,9 @@ export default class SortingVisualiser extends React.Component {
                     <div
                     className="array-bar" 
                     key={idx}
-                    style={{height: `${value}px`}}
+                    style={{
+                        backgroundColor: PRIMARY_COLOUR,
+                        height: `${value}px`,}}
                     ></div>
                 ))}
                     
