@@ -1,10 +1,10 @@
 /**
- * Implements Merge Sort in ascending order
+ * Implements Merge Sort in ascending order while recording the comparison and swap sequences
  * Stable, recursive, divide & conquer, time O(nlogn), Space O(n)
  * Works well with large datasets, if size of dataset unknown consider other alogrithm like insertion sort
 
  * @param {array} array unsorted array
- * @returns {array} ascending sorted array
+ * @returns {array} array of animation sequences to compare and sort array
  */
 export function mergeSortAnimations(array) {
 
@@ -124,15 +124,44 @@ export function mergeSortAnimations(array) {
     }
 }
 
-export function bubbleSort(array) {
+/**
+ * Implements Bubble Sort in ascending order while recording the comparison and swap sequences
+ * 
+ * Stable, in-place, time O(n^2), space O(N)
+ * 
+ * @param {*} array unsorted array
+ * @returns ascending sorted array
+ */
+export function bubbleSortAnimations(array) {
+
+    const animations = [];
+
     for (let i = 0; i < array.length; i++) {
+
+        // visit each pair of elements in the array
         for (let j = 0; j < array.length - (i + 1); j++) {
+
+            animations.push([j, j + 1]);
+            animations.push([j, j + 1]);
+
+            // if current item is greater than next item, swap
             if (array[j] > array[j + 1]) {
+
+                animations.push([j, j + 1, array[j + 1], array[j]]);
+
                 let temp = array[j];
                 array[j] = array[j + 1];
                 array[j + 1] = temp;
             }
+            else {
+
+                // no swap
+                animations.push([j, j + 1, array[j], array[j + 1]]);
+            }
         }
     }
-    return array;
+    return animations;
+}
+
+export function insertionSort(array) {
 }
