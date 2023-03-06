@@ -29,6 +29,23 @@ export default class SortingVisualiser extends React.Component {
     }
 
     // this is used during generate new array button
+    generateNewArray() {
+        this.resetArray();
+        this.setAllBarColours(UNSORTED_COLOUR);
+    }
+
+    // sets all array-bars to a colour
+    setAllBarColours(colour) {
+        const arrayBars = document.getElementsByClassName('array-bar');
+
+        for (let i = 0; this.state.array.length; i++) {
+
+            const barStyle = arrayBars[i].style;
+            barStyle.backgroundColor = colour;
+        }
+    }
+
+    // generates new random array
     resetArray() {
         const array = [];
         // const MAXVALUE = 700; // max value of random integer 
@@ -185,14 +202,7 @@ export default class SortingVisualiser extends React.Component {
             }
             else {
                 setTimeout(() => {
-
-                    const arrayBars = document.getElementsByClassName('array-bar');
-
-                    for (let i = 0; this.state.array.length; i++) {
-
-                        const barStyle = arrayBars[i].style;
-                        barStyle.backgroundColor = SORTED_COLOUR;
-                    }
+                    this.setAllBarColours(SORTED_COLOUR);
                 },
                     i * ANIMATION_SPEED_MS);
             }
@@ -268,7 +278,7 @@ export default class SortingVisualiser extends React.Component {
         return (
             <div>
                 <div className="menu-bar">
-                    <button onClick={() => this.resetArray()}>Generate New Array</button>
+                    <button onClick={() => this.generateNewArray()}>Generate New Array</button>
                     <button onClick={() => this.mergeSort()}>Merge Sort</button>
                     <button onClick={() => this.quickSort()}>Quick Sort</button>
                     <button onClick={() => this.heapSort()}>Heap Sort</button>
