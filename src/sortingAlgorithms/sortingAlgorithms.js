@@ -134,6 +134,7 @@ export function mergeSortAnimations(array) {
  */
 export function bubbleSortAnimations(array) {
 
+    // stores animation sequences
     const animations = [];
 
     for (let i = 0; i < array.length; i++) {
@@ -141,22 +142,34 @@ export function bubbleSortAnimations(array) {
         // visit each pair of elements in the array
         for (let j = 0; j < array.length - (i + 1); j++) {
 
+            // is the element in its final sorted position
+            let isSorted = false;
+
+            // comparing j and (j+1), animations:
+            // 1. change bars to comparison colours
+            // 2. revert bars to original colours
             animations.push([j, j + 1]);
             animations.push([j, j + 1]);
 
             // if current item is greater than next item, swap
             if (array[j] > array[j + 1]) {
 
-                animations.push([j, j + 1, array[j + 1], array[j]]);
+
+                // check if element is in final sorted position
+                if (j === array.length - (i + 1) - 1) {
+                    isSorted = true;
+                }
+
+                // swap values
+                animations.push([j, j + 1, array[j + 1], array[j], isSorted]);
 
                 let temp = array[j];
                 array[j] = array[j + 1];
                 array[j + 1] = temp;
             }
             else {
-
-                // no swap
-                animations.push([j, j + 1, array[j], array[j + 1]]);
+                // don't swap values
+                animations.push([j, j + 1, array[j], array[j + 1], isSorted]);
             }
         }
     }

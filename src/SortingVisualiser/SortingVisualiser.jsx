@@ -3,16 +3,19 @@ import './SortingVisualiser.css';
 import * as sortingAlgorithms from '../sortingAlgorithms/sortingAlgorithms';
 
 // animation speed (miliseconds)
-const ANIMATION_SPEED_MS = 0.5;
+const ANIMATION_SPEED_MS = 1.5;
 
 // STATIC number of bars (values) in the array -- not used 
 const NUMBER_OF_ARRAY_BARS = 310;
 
 // main colour of array bars
-const PRIMARY_COLOUR = 'pink';
+const UNSORTED_COLOUR = 'pink';
 
 // comparison colour of array bars
-const SECONDARY_COLOUR = 'magenta';
+const COMPARISON_COLOUR = 'magenta';
+
+// sorted colour of array bars
+const SORTED_COLOUR = 'lime';
 
 export default class SortingVisualiser extends React.Component {
     constructor(props) {
@@ -62,7 +65,7 @@ export default class SortingVisualiser extends React.Component {
                 const [barOneIndex, barTwoIndex] = animations[i];
                 const barOneStyle = arrayBars[barOneIndex].style;
                 const barTwoStyle = arrayBars[barTwoIndex].style;
-                const colour = i % 3 === 0 ? SECONDARY_COLOUR : PRIMARY_COLOUR;
+                const colour = i % 3 === 0 ? COMPARISON_COLOUR : UNSORTED_COLOUR;
                 setTimeout(() => {
 
                     barOneStyle.backgroundColor = colour;
@@ -147,7 +150,7 @@ export default class SortingVisualiser extends React.Component {
                 const barOneStyle = arrayBars[barOneIndex].style;
                 const barTwoStyle = arrayBars[barTwoIndex].style;
 
-                const colour = SECONDARY_COLOUR;
+                const colour = COMPARISON_COLOUR;
 
                 setTimeout(() => {
 
@@ -164,7 +167,7 @@ export default class SortingVisualiser extends React.Component {
                 const barOneStyle = arrayBars[barOneIndex].style;
                 const barTwoStyle = arrayBars[barTwoIndex].style;
 
-                const colour = PRIMARY_COLOUR;
+                const colour = UNSORTED_COLOUR;
 
                 setTimeout(() => {
 
@@ -181,15 +184,18 @@ export default class SortingVisualiser extends React.Component {
 
                 setTimeout(() => {
 
-                    const [barOneIndex, barTwoIndex, barOneHeight, barTwoHeight] = animations[i - 1];
+                    const [barOneIndex, barTwoIndex, barOneHeight, barTwoHeight, isSorted] = animations[i - 1];
                     const barOneStyle = arrayBars[barOneIndex].style;
                     const barTwoStyle = arrayBars[barTwoIndex].style;
-
                     barOneStyle.height = `${barOneHeight}px`;
                     barTwoStyle.height = `${barTwoHeight}px`;
+
+                    // 4th animation - final sorted position
+                    if (isSorted) {
+                        barTwoStyle.backgroundColor = SORTED_COLOUR;
+                    }
                 },
                     i * ANIMATION_SPEED_MS);
-
             }
         }
     }
@@ -216,7 +222,7 @@ export default class SortingVisualiser extends React.Component {
                             className="array-bar"
                             key={idx}
                             style={{
-                                backgroundColor: PRIMARY_COLOUR,
+                                backgroundColor: UNSORTED_COLOUR,
                                 height: `${value}px`,
                             }}
                         ></div>
