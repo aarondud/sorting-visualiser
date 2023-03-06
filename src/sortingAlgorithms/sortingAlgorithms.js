@@ -127,7 +127,7 @@ export function mergeSortAnimations(array) {
 /**
  * Implements Bubble Sort in ascending order while recording the comparison and swap sequences
  * 
- * Stable, in-place, time O(n^2), space O(N)
+ * Stable, time O(n^2), space O(N)
  * 
  * @param {*} array unsorted array
  * @returns ascending sorted array
@@ -176,5 +176,48 @@ export function bubbleSortAnimations(array) {
     return animations;
 }
 
-export function insertionSort(array) {
+
+
+/**
+ * Implements Insertion Sort in ascending order while recording the animation sequences for visualisation
+ * 
+ * Stable, time O(n^2), space O(n)
+ * 
+ * @param {*} array unsorted array
+ * @returns animation sequences for insertion sort
+ */
+export function insertionSortAnimations(array) {
+
+    // TODO: add colour for sorted sub-array
+
+    // array stores animation sequences
+    const animations = [];
+
+    for (let i = 0; i < array.length; i++) {
+
+        let j = i - 1;
+        let current = array[i];
+
+        animations.push([1, i]);
+
+        while (j >= 0 && current < array[j]) {
+
+            // change item at j to comparison colour
+            animations.push([1, j]);
+
+            // move up element at j to j + 1 
+            animations.push([2, j + 1, j, array[j], array[j]]);
+
+            array[j + 1] = array[j];
+            j--;
+
+        }
+
+        // move current to it's place in sorted sub-array
+        animations.push([3, j + 1, current]);
+
+        array[j + 1] = current;
+    }
+
+    return animations;
 }
